@@ -123,3 +123,27 @@ func splitRuneWidth(text string, width int) []string {
 	}
 	return texts
 }
+
+func RightSlice(texts []string, width int) []string {
+	max := align.MaxStringWidth(texts)
+	var text string
+	for _, v := range texts {
+		w := runewidth.StringWidth(v)
+		diff := max - w
+		pad := strings.Repeat(" ", diff)
+		text += v + pad
+	}
+	srcWidth := width
+	if max < width-bodyPaddingWidth {
+		width = max + bodyPaddingWidth
+	}
+	var ret []string
+	for _, v := range Right(text, width) {
+		w := runewidth.StringWidth(v)
+		diff := srcWidth - w
+		pad := strings.Repeat(" ", diff)
+		t := pad + v
+		ret = append(ret, t)
+	}
+	return ret
+}
