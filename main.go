@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 
 	"github.com/docopt/docopt-go"
@@ -10,6 +9,14 @@ import (
 	"github.com/jiro4989/textchat/balloon"
 	"github.com/jiro4989/textchat/icon"
 )
+
+type Config struct {
+	Version bool     `docopt:"--version"`
+	Right   bool     `docopt:"--right"`
+	Icon    string   `docopt:"--icon"`
+	Width   int      `docopt:"--width"`
+	Words   []string `docopt:"<word>"`
+}
 
 const doc = `textchat is a terminal chat cli.
 
@@ -28,46 +35,57 @@ Options:
 
 func main() {
 	opts, _ := docopt.ParseDoc(doc)
-	if ok := opts["--version"].(bool); ok {
+	var config Config
+	if err := opts.Bind(&config); err != nil {
+		panic(err)
+	}
+
+	if config.Version {
 		fmt.Println(Version)
 		return
 	}
 
 	// 文字の指定がない時はok がfalseになる
-	iconfile, _ := opts["--icon"].(string)
-	aa, err := icon.AA(iconfile)
+	aa, err := icon.AA(config.Icon)
 	if err != nil {
 		panic(err)
 	}
 
-	widthStr, _ := opts["--width"].(string)
-	width, err := strconv.Atoi(widthStr)
-	if err != nil {
-		panic(err)
-	}
+	width := config.Width
 
 	max := align.MaxStringWidth(aa)
 	width -= max + 5 // 左右 + パディング
 
 	var chatText []string
-	words, ok := opts["<word>"].([]string)
-	if !ok {
-		panic("error TODO")
-	}
+	words := config.Words
 	if len(words) < 1 {
 		lines := readStdin()
-		chatText = balloon.LeftSlice(lines, width)
+		if config.Right {
+			chatText = balloon.RightSlice(lines, width)
+		} else {
+			chatText = balloon.LeftSlice(lines, width)
+		}
 	} else {
 		text := strings.Join(words, " ")
-		chatText = balloon.Left(text, width)
+		if config.Right {
+			chatText = balloon.Right(text, width)
+		} else {
+			chatText = balloon.Left(text, width)
+		}
 	}
 
 	aa = balloon.Balloon(aa, len(chatText)-2)
 
 	for i := 0; i < len(aa); i++ {
-		aaLine := aa[i]
-		chatLine := chatText[i]
-		t := fmt.Sprintf("%s %s", aaLine, chatLine)
+		var left, right string
+		if config.Right {
+			left = chatText[i]
+			right = aa[i]
+		} else {
+			left = aa[i]
+			right = chatText[i]
+		}
+		t := fmt.Sprintf("%s %s", left, right)
 		fmt.Println(t)
 	}
 }
