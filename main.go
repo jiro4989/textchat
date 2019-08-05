@@ -2,8 +2,11 @@ package main
 
 import (
 	"fmt"
+	"strconv"
+	"strings"
 
 	"github.com/docopt/docopt-go"
+	"github.com/jiro4989/tchat/balloon"
 	"github.com/jiro4989/tchat/icon"
 )
 
@@ -20,7 +23,7 @@ Options:
 	-v --version            Show version.
 	-r --right              Say word on right.
 	-i --icon=<textfile>    Icon AA file.
-	-w --width=<width>      Display width.`
+	-w --width=<width>      Display width. [default: 80]`
 
 func main() {
 	opts, _ := docopt.ParseDoc(doc)
@@ -29,39 +32,36 @@ func main() {
 		return
 	}
 
-	iconfile, ok := opts["<textfile>"].(string)
+	// 文字の指定がない時はok がfalseになる
+	iconfile, _ := opts["--icon"].(string)
+	aa, err := icon.AA(iconfile)
+	if err != nil {
+		panic(err)
+	}
+
+	widthStr, _ := opts["--width"].(string)
+	width, err := strconv.Atoi(widthStr)
+	if err != nil {
+		panic(err)
+	}
+
+	var chatText []string
+	words, ok := opts["<word>"].([]string)
 	if !ok {
 		panic("error TODO")
 	}
-	aa, _ := icon.AA(iconfile)
+	if len(words) < 1 {
+		lines := readStdin()
+		chatText = balloon.LeftSlice(lines, width)
+	} else {
+		text := strings.Join(words, " ")
+		fmt.Println(text, width)
+		chatText = balloon.Left(text, width)
+	}
+
 	fmt.Println(aa)
 
-	// var err error
-	// switch cmd := opts["<command>"]; cmd {
-	// case nil:
-	// 	err = CmdSearch()
-	// case "checkout":
-	// 	err = CmdCheckout()
-	// case "log":
-	// 	err = CmdLog()
-	// case "new-feature-branch":
-	// 	err = CmdNewFeatureBranch()
-	// case "new-hotfix-branch":
-	// 	err = CmdNewHotfixBranch()
-	// case "push-set-upstream":
-	// 	err = CmdPushSetUpstream()
-	// case "set-ssh-url":
-	// 	err = CmdSetSshUrl()
-	// case "table":
-	// 	err = CmdTable()
-	// default:
-	// 	fmt.Fprintln(os.Stderr, doc)
-	// 	msg := fmt.Sprintf("Illegal command. command = %v", cmd)
-	// 	err = errors.New(msg)
-	// }
-	// if err != nil {
-	// 	fmt.Fprintln(os.Stderr, err)
-	// 	os.Exit(1)
-	// }
-
+	for _, text := range chatText {
+		fmt.Println(text)
+	}
 }
