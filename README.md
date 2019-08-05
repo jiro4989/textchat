@@ -1,21 +1,21 @@
-# tchat
+# textchat
 
-tchat is a terminal chat cli.
+textchat is a terminal chat cli.
 
 ## Installation
 
 ```bash
-go get github.com/jiro4989/tchat
+go get github.com/jiro4989/textchat
 ```
 
 ## Usage
 
 ```bash
-tchat Hello
-tchat -r Hello
-tchat -i icon.txt こんにちは
-tchat -i icon.txt -r こんにちは
-tchat -i <(cat icon.txt) Hello world
-seq 5 | tchat
-tchat -w 100 -r Right
+textchat Hello
+textchat -r Hello
+textchat -i icon.txt こんにちは
+textchat -i icon.txt -r こんにちは
+textchat -i <(cat icon.txt) Hello world
+seq 5 | textchat
+textchat -w 100 -r Right
 ```

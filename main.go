@@ -7,17 +7,17 @@ import (
 
 	"github.com/docopt/docopt-go"
 	"github.com/jiro4989/align/align"
-	"github.com/jiro4989/tchat/balloon"
-	"github.com/jiro4989/tchat/icon"
+	"github.com/jiro4989/textchat/balloon"
+	"github.com/jiro4989/textchat/icon"
 )
 
-const doc = `tchat is a terminal chat cli.
+const doc = `textchat is a terminal chat cli.
 
 Usage:
-	tchat
-	tchat [options] <word>...
-	tchat -h | --help
-	tchat -v | --version
+	textchat
+	textchat [options] <word>...
+	textchat -h | --help
+	textchat -v | --version
 
 Options:
 	-h --help               Show this screen.
