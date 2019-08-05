@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/jiro4989/align/align"
 	"github.com/mattn/go-runewidth"
 )
 
@@ -41,6 +42,21 @@ func Left(text string, width int) []string {
 	bln = append(bln, bottom)
 
 	return bln
+}
+
+func LeftSlice(texts []string, width int) []string {
+	max := align.MaxStringWidth(texts)
+	var text string
+	for _, v := range texts {
+		w := runewidth.StringWidth(v)
+		diff := max - w
+		pad := strings.Repeat(" ", diff)
+		text += v + pad
+	}
+	if max < width-bodyPaddingWidth {
+		width = max + bodyPaddingWidth
+	}
+	return Left(text, width)
 }
 
 // Right returns right side balloon.

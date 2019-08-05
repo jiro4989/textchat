@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/docopt/docopt-go"
+	"github.com/jiro4989/tchat/icon"
 )
 
 const doc = `tchat is a terminal chat cli.
@@ -27,6 +28,13 @@ func main() {
 		fmt.Println(Version)
 		return
 	}
+
+	iconfile, ok := opts["<textfile>"].(string)
+	if !ok {
+		panic("error TODO")
+	}
+	aa, _ := icon.AA(iconfile)
+	fmt.Println(aa)
 
 	// var err error
 	// switch cmd := opts["<command>"]; cmd {

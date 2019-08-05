@@ -62,6 +62,81 @@ func TestLeft(t *testing.T) {
 	}
 }
 
+func TestLeftSlice(t *testing.T) {
+	type TestData struct {
+		desc   string
+		texts  []string
+		width  int
+		expect []string
+	}
+	tds := []TestData{
+		{
+			desc: "Simple text",
+			texts: []string{
+				"a",
+				"bb",
+				"ccc",
+			},
+			width: 40,
+			expect: []string{
+				" .-------.",
+				"<   a    |",
+				" |  bb   |",
+				" |  ccc  |",
+				" `-------'",
+			},
+		},
+		{
+			desc: "Simple text",
+			texts: []string{
+				"a",
+				"bb",
+				"あい",
+			},
+			width: 40,
+			expect: []string{
+				" .--------.",
+				"<   a     |",
+				" |  bb    |",
+				" |  あい  |",
+				" `--------'",
+			},
+		},
+		{
+			desc: "Simple text",
+			texts: []string{
+				"あい",
+				"a",
+				"bb",
+			},
+			width: 40,
+			expect: []string{
+				" .--------.",
+				"<   あい  |",
+				" |  a     |",
+				" |  bb    |",
+				" `--------'",
+			},
+		},
+		{
+			desc: "Simple text",
+			texts: []string{
+				"あいうえお",
+			},
+			width: 40,
+			expect: []string{
+				" .--------------.",
+				"<   あいうえお  |",
+				" `--------------'",
+			},
+		},
+	}
+	for _, v := range tds {
+		got := LeftSlice(v.texts, v.width)
+		assert.Equal(t, v.expect, got, v.desc)
+	}
+}
+
 func TestRight(t *testing.T) {
 	type TestData struct {
 		desc   string
