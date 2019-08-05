@@ -21,7 +21,7 @@ type Config struct {
 const doc = `textchat is a terminal chat cli.
 
 Usage:
-	textchat
+	textchat [options]
 	textchat [options] <word>...
 	textchat -h | --help
 	textchat -v | --version
@@ -60,6 +60,15 @@ func main() {
 	words := config.Words
 	if len(words) < 1 {
 		lines := readStdin()
+		h := len(balloon.SplitRuneWidth(lines, width))
+		if h < len(aa) {
+			diff := len(aa) - h
+			var emptyLines []string
+			for i := 0; i < diff; i++ {
+				emptyLines = append(emptyLines, "")
+			}
+			lines = append(lines, emptyLines...)
+		}
 		if config.Right {
 			chatText = balloon.RightSlice(lines, width)
 		} else {
@@ -74,7 +83,11 @@ func main() {
 		}
 	}
 
-	aa = balloon.Balloon(aa, len(chatText)-2)
+	height := len(chatText) - 2
+	if height < len(aa) {
+		height = len(aa) - 2
+	}
+	aa = balloon.Balloon(aa, height)
 
 	for i := 0; i < len(aa); i++ {
 		var left, right string

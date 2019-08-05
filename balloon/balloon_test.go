@@ -294,7 +294,7 @@ func TestSplitRuneWidth(t *testing.T) {
 		},
 	}
 	for _, v := range tds {
-		got := splitRuneWidth(v.text, v.width)
+		got := SplitRuneWidth(v.text, v.width)
 		assert.Equal(t, v.expect, got, v.desc)
 	}
 }

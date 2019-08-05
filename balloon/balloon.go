@@ -127,7 +127,7 @@ func Right(text string, width int) []string {
 	return bln
 }
 
-func splitRuneWidth(text string, width int) []string {
+func SplitRuneWidth(text string, width int) []string {
 	if width < 1 || len(text) < 1 {
 		return []string{}
 	}
