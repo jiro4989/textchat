@@ -25,7 +25,7 @@ func TestLeft(t *testing.T) {
 			},
 		},
 		{
-			desc:  "Simple text",
+			desc:  "Wrap border line",
 			text:  "012345678901234567890123456789012",
 			width: 40,
 			expect: []string{
@@ -35,7 +35,7 @@ func TestLeft(t *testing.T) {
 			},
 		},
 		{
-			desc:  "Simple text",
+			desc:  "Wrap text",
 			text:  "0123456789012345678901234567890123",
 			width: 40,
 			expect: []string{
@@ -46,7 +46,7 @@ func TestLeft(t *testing.T) {
 			},
 		},
 		{
-			desc:  "Simple text",
+			desc:  "Multibyte string",
 			text:  "あいうえお",
 			width: 40,
 			expect: []string{
@@ -58,6 +58,62 @@ func TestLeft(t *testing.T) {
 	}
 	for _, v := range tds {
 		got := Left(v.text, v.width)
+		assert.Equal(t, v.expect, got, v.desc)
+	}
+}
+
+func TestRight(t *testing.T) {
+	type TestData struct {
+		desc   string
+		text   string
+		width  int
+		expect []string
+	}
+	tds := []TestData{
+		{
+			desc:  "Simple text",
+			text:  "Hello world",
+			width: 40,
+			expect: []string{
+				"                      .---------------. ",
+				"                      |  Hello world   >",
+				"                      `---------------' ",
+			},
+		},
+		{
+			desc:  "Wrap border line",
+			text:  "012345678901234567890123456789012",
+			width: 40,
+			expect: []string{
+				".-------------------------------------. ",
+				"|  012345678901234567890123456789012   >",
+				"`-------------------------------------' ",
+			},
+		},
+		{
+			desc:  "Wrap text",
+			text:  "0123456789012345678901234567890123",
+			width: 40,
+			expect: []string{
+				".-------------------------------------. ",
+				"|  012345678901234567890123456789012   >",
+				"|  3                                  | ",
+				"`-------------------------------------' ",
+			},
+		},
+		{
+			desc:  "Multibyte string",
+			text:  "あいうえお",
+			width: 40,
+			expect: []string{
+				"                       .--------------. ",
+				"                       |  あいうえお   >",
+				"                       `--------------' ",
+			},
+		},
+	}
+	for _, v := range tds {
+		got := Right(v.text, v.width)
 		assert.Equal(t, v.expect, got, v.desc)
 	}
 }

@@ -7,10 +7,10 @@ import (
 	"github.com/mattn/go-runewidth"
 )
 
+const bodyPaddingWidth = 7
+
 // Left returns left side balloon.
 func Left(text string, width int) []string {
-	const bodyPaddingWidth = 7
-
 	// Substitue left padding (4) and right padding (3)
 	bodyWidth := width - bodyPaddingWidth
 	if textWidth := runewidth.StringWidth(text); textWidth <= bodyWidth {
@@ -45,7 +45,39 @@ func Left(text string, width int) []string {
 
 // Right returns right side balloon.
 func Right(text string, width int) []string {
-	return nil
+	srcWidth := width
+
+	// Substitue left padding (4) and right padding (3)
+	bodyWidth := width - bodyPaddingWidth
+	if textWidth := runewidth.StringWidth(text); textWidth <= bodyWidth {
+		width = textWidth + bodyPaddingWidth
+	}
+
+	var bln []string
+
+	// Substitue left padding (2) and right padding (1)
+	lineWidth := width - 3
+	pad := strings.Repeat(" ", srcWidth-width)
+	top := pad + "." + strings.Repeat("-", lineWidth) + ". "
+	bln = append(bln, top)
+
+	for i, t := range splitRuneWidth(text, bodyWidth) {
+		middle := pad
+		diff := width - bodyPaddingWidth - runewidth.StringWidth(t)
+		pad := strings.Repeat(" ", diff)
+		middle += fmt.Sprintf("|  %s%s", t, pad)
+		if i == 0 {
+			middle += "   >"
+		} else {
+			middle += "  | "
+		}
+		bln = append(bln, middle)
+	}
+
+	bottom := pad + "`" + strings.Repeat("-", lineWidth) + "' "
+	bln = append(bln, bottom)
+
+	return bln
 }
 
 func splitRuneWidth(text string, width int) []string {
