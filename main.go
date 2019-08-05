@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/docopt/docopt-go"
+	"github.com/jiro4989/align/align"
 	"github.com/jiro4989/tchat/balloon"
 	"github.com/jiro4989/tchat/icon"
 )
@@ -59,7 +60,14 @@ func main() {
 		chatText = balloon.Left(text, width)
 	}
 
-	fmt.Println(aa)
+	max := align.MaxStringWidth(aa)
+	top := strings.Repeat(" ", max)
+	aa = append([]string{top}, aa...)
+	aa = append(aa, top)
+
+	for _, text := range aa {
+		fmt.Println(text)
+	}
 
 	for _, text := range chatText {
 		fmt.Println(text)
