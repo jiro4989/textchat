@@ -10,6 +10,37 @@ import (
 
 const bodyPaddingWidth = 7
 
+// height -1
+func Balloon(aa []string, height int) []string {
+	max := align.MaxStringWidth(aa)
+	var ret []string
+
+	blnWidth := max + 4
+	border := strings.Repeat("-", blnWidth-2)
+	top := fmt.Sprintf(".%s.", border)
+	ret = append(ret, top)
+
+	if height == -1 {
+		height = len(aa)
+	}
+
+	for i := 0; i < height; i++ {
+		line := strings.Repeat(" ", max)
+		if i < len(aa) {
+			line = aa[i]
+		}
+
+		diff := max - runewidth.StringWidth(line)
+		pad := strings.Repeat(" ", diff)
+		line = fmt.Sprintf("| %s%s |", line, pad)
+		ret = append(ret, line)
+	}
+
+	bottom := fmt.Sprintf("`%s'", border)
+	ret = append(ret, bottom)
+	return ret
+}
+
 // Left returns left side balloon.
 func Left(text string, width int) []string {
 	// Substitue left padding (4) and right padding (3)

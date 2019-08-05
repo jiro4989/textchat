@@ -6,6 +6,60 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestBalloon(t *testing.T) {
+	type TestData struct {
+		desc   string
+		texts  []string
+		height int
+		expect []string
+	}
+	tds := []TestData{
+		{
+			desc: "Simple text",
+			texts: []string{
+				"太郎",
+			},
+			height: -1,
+			expect: []string{
+				".------.",
+				"| 太郎 |",
+				"`------'",
+			},
+		},
+		{
+			desc: "Simple text",
+			texts: []string{
+				"太郎",
+				"a",
+			},
+			height: -1,
+			expect: []string{
+				".------.",
+				"| 太郎 |",
+				"| a    |",
+				"`------'",
+			},
+		},
+		{
+			desc: "Simple text",
+			texts: []string{
+				"太郎",
+			},
+			height: 2,
+			expect: []string{
+				".------.",
+				"| 太郎 |",
+				"|      |",
+				"`------'",
+			},
+		},
+	}
+	for _, v := range tds {
+		got := Balloon(v.texts, v.height)
+		assert.Equal(t, v.expect, got, v.desc)
+	}
+}
+
 func TestLeft(t *testing.T) {
 	type TestData struct {
 		desc   string
