@@ -1,0 +1,16 @@
+language: go
+
+env:
+  global:
+    - GO111MODULE=on
+
+install:
+  - make bootstrap
+
+script:
+  - go version
+  - make test
+  - make install
+
+# before_deploy:
+#   - make xbuild archive
