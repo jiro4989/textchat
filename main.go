@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/docopt/docopt-go"
+	"github.com/jiro4989/align/align"
 	"github.com/jiro4989/tchat/balloon"
 	"github.com/jiro4989/tchat/icon"
 )
@@ -44,6 +45,9 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	max := align.MaxStringWidth(aa)
+	width -= max + 5 // 左右 + パディング
 
 	var chatText []string
 	words, ok := opts["<word>"].([]string)
