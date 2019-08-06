@@ -80,40 +80,43 @@ func main() {
 	}
 	aa = balloon.Balloon(aa, -1)
 
+	const whiteSpace = " "
+
 	for i := 0; i < height; i++ {
-		var left, right string
+		var left, right, t string
 		if config.Right {
 			if len(chatText) <= i {
 				right = aa[i]
-				diff := width
-				left = strings.Repeat(" ", diff)
+				t = align.AlignRight([]string{right}, config.Width, whiteSpace)[0]
 			} else if len(aa) <= i {
 				left = chatText[i]
-				diff := width - runewidth.StringWidth(left)
-				right = strings.Repeat(" ", diff)
+				lw := runewidth.StringWidth(left)
+				rw := runewidth.StringWidth(aa[0])
+				right := align.AlignLeft([]string{left}, lw+1+rw, whiteSpace)
+				t = align.AlignRight(right, config.Width, whiteSpace)[0]
 			} else {
 				left = chatText[i]
 				right = aa[i]
+				lr := fmt.Sprintf("%s %s", left, right)
+				t = align.AlignRight([]string{lr}, config.Width, whiteSpace)[0]
 			}
 		} else {
 			if len(chatText) <= i {
 				left = aa[i]
-				diff := width - runewidth.StringWidth(left)
-				right = strings.Repeat(" ", diff)
+				t = align.AlignLeft([]string{left}, config.Width, whiteSpace)[0]
 			} else if len(aa) <= i {
 				right = chatText[i]
-				diff := runewidth.StringWidth(aa[0])
-				left = strings.Repeat(" ", diff)
+				lw := runewidth.StringWidth(aa[0])
+				rw := runewidth.StringWidth(right)
+				left := align.AlignRight([]string{right}, lw+1+rw, whiteSpace)
+				t = align.AlignLeft(left, config.Width, whiteSpace)[0]
 			} else {
 				left = aa[i]
 				right = chatText[i]
+				lr := fmt.Sprintf("%s %s", left, right)
+				t = align.AlignLeft([]string{lr}, config.Width, whiteSpace)[0]
 			}
-
-			w := width - runewidth.StringWidth(" "+right)
-			pad := strings.Repeat(" ", w)
-			right += pad
 		}
-		t := fmt.Sprintf("%s %s", left, right)
 		fmt.Println(t)
 	}
 }
