@@ -7,4 +7,5 @@ type Config struct {
 	Width   int      `docopt:"--width"`
 	Pad     string   `docopt:"--pad"`
 	Words   []string `docopt:"<word>"`
+	Name    string   `docopt:"--name"`
 }

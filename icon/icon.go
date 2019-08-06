@@ -5,10 +5,16 @@ import (
 	"strings"
 
 	"github.com/jiro4989/align/align"
+	"github.com/jiro4989/textchat/config"
 	"github.com/mattn/go-gimei"
 )
 
-func AA(file string) ([]string, error) {
+func AA(config config.Config) ([]string, error) {
+	if name := config.Name; name != "" {
+		return []string{name}, nil
+	}
+
+	file := config.Icon
 	if file == "" {
 		name := gimei.NewName().Last.Kanji()
 		return []string{name}, nil
