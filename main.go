@@ -56,24 +56,21 @@ func main() {
 	max := align.MaxStringWidth(aa)
 	width -= max + 5 // 左右 + パディング
 
+	// チャットのテキストを取得t
 	var chatText []string
-	words := config.Words
-	if len(words) < 1 {
-		lines := readStdin()
-		if config.Right {
-			chatText = balloon.RightSlice(lines, width)
-		} else {
-			chatText = balloon.LeftSlice(lines, width)
-		}
+	var lines []string
+	if words := config.Words; len(words) < 1 {
+		lines = readStdin()
 	} else {
-		text := strings.Join(words, " ")
-		if config.Right {
-			chatText = balloon.Right(text, width)
-		} else {
-			chatText = balloon.Left(text, width)
-		}
+		lines = []string{strings.Join(words, " ")}
+	}
+	if config.Right {
+		chatText = balloon.RightSlice(lines, width)
+	} else {
+		chatText = balloon.LeftSlice(lines, width)
 	}
 
+	// アイコンのAAを取得
 	height := len(chatText)
 	if height-2 < len(aa) {
 		height = len(aa) + 2
