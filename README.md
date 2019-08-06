@@ -44,6 +44,15 @@ $ seq 5 | textchat
           `-----'                                                               
 ```
 
+You can set a your name.
+
+```bash
+$ textchat -n jiro こんにちは
+.------.  .--------------.                                                      
+| jiro | <   こんにちは  |                                                      
+`------'  `--------------'                                                      
+```
+
 Other examples.
 
 ```bash
@@ -106,4 +115,5 @@ Options:
 	-i --icon=<textfile>    Icon AA file.
 	-w --width=<width>      Display width. [default: 80]
 	-p --pad=<pad>          Pad string. [default:  ]
+	-n --name=<name>        Set speakers name.
 ```
