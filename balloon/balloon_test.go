@@ -184,6 +184,22 @@ func TestLeftSlice(t *testing.T) {
 				" `--------------'",
 			},
 		},
+		{
+			desc: "Wrap multi line",
+			texts: []string{
+				"12345",
+				"12345",
+			},
+			width: 10,
+			expect: []string{
+				" .-------.",
+				"<   123  |",
+				" |  45   |",
+				" |  123  |",
+				" |  45   |",
+				" `-------'",
+			},
+		},
 	}
 	for _, v := range tds {
 		got := LeftSlice(v.texts, v.width)

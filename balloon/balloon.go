@@ -43,51 +43,38 @@ func Balloon(aa []string, height int) []string {
 
 // Left returns left side balloon.
 func Left(text string, width int) []string {
-	// Substitue left padding (4) and right padding (3)
-	bodyWidth := width - bodyPaddingWidth
-	if textWidth := runewidth.StringWidth(text); textWidth <= bodyWidth {
-		width = textWidth + bodyPaddingWidth
-	}
-
-	var bln []string
-
-	// Substitue left padding (2) and right padding (1)
-	lineWidth := width - 3
-	top := " ." + strings.Repeat("-", lineWidth) + "."
-	bln = append(bln, top)
-
-	for i, t := range splitRuneWidth(text, bodyWidth) {
-		var middle string
-		if i == 0 {
-			middle += "<   "
-		} else {
-			middle += " |  "
-		}
-		diff := width - bodyPaddingWidth - runewidth.StringWidth(t)
-		pad := strings.Repeat(" ", diff)
-		middle += fmt.Sprintf("%s%s  |", t, pad)
-		bln = append(bln, middle)
-	}
-
-	bottom := " `" + strings.Repeat("-", lineWidth) + "'"
-	bln = append(bln, bottom)
-
-	return bln
+	return LeftSlice([]string{text}, width)
 }
 
 func LeftSlice(texts []string, width int) []string {
 	max := align.MaxStringWidth(texts)
-	var text string
-	for _, v := range texts {
-		w := runewidth.StringWidth(v)
-		diff := max - w
-		pad := strings.Repeat(" ", diff)
-		text += v + pad
+	if w := width - bodyPaddingWidth; w < max {
+		max = w
 	}
-	if max < width-bodyPaddingWidth {
-		width = max + bodyPaddingWidth
+
+	var ret []string
+	border := strings.Repeat("-", max+bodyPaddingWidth-3)
+	top := fmt.Sprintf(" .%s.", border)
+	ret = append(ret, top)
+
+	for i, text := range texts {
+		for j, t := range SplitRuneWidth(text, max) {
+			var middle string
+			if i+j == 0 {
+				middle += "<   "
+			} else {
+				middle += " |  "
+			}
+			diff := max - runewidth.StringWidth(t)
+			pad := strings.Repeat(" ", diff)
+			middle += fmt.Sprintf("%s%s  |", t, pad)
+			ret = append(ret, middle)
+		}
 	}
-	return Left(text, width)
+
+	bottom := fmt.Sprintf(" `%s'", border)
+	ret = append(ret, bottom)
+	return ret
 }
 
 // Right returns right side balloon.
@@ -108,7 +95,7 @@ func Right(text string, width int) []string {
 	top := pad + "." + strings.Repeat("-", lineWidth) + ". "
 	bln = append(bln, top)
 
-	for i, t := range splitRuneWidth(text, bodyWidth) {
+	for i, t := range SplitRuneWidth(text, bodyWidth) {
 		middle := pad
 		diff := width - bodyPaddingWidth - runewidth.StringWidth(t)
 		pad := strings.Repeat(" ", diff)
