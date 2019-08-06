@@ -8,6 +8,7 @@ import (
 	"github.com/jiro4989/align/align"
 	"github.com/jiro4989/textchat/balloon"
 	"github.com/jiro4989/textchat/icon"
+	"github.com/mattn/go-runewidth"
 )
 
 type Config struct {
@@ -45,7 +46,6 @@ func main() {
 		return
 	}
 
-	// 文字の指定がない時はok がfalseになる
 	aa, err := icon.AA(config.Icon)
 	if err != nil {
 		panic(err)
@@ -74,20 +74,44 @@ func main() {
 		}
 	}
 
-	height := len(chatText) - 2
-	if height < len(aa) {
-		height = len(aa) - 2
+	height := len(chatText)
+	if height-2 < len(aa) {
+		height = len(aa) + 2
 	}
-	aa = balloon.Balloon(aa, height)
+	aa = balloon.Balloon(aa, -1)
 
-	for i := 0; i < len(aa); i++ {
+	for i := 0; i < height; i++ {
 		var left, right string
 		if config.Right {
-			left = chatText[i]
-			right = aa[i]
+			if len(chatText) <= i {
+				right = aa[i]
+				diff := width
+				left = strings.Repeat(" ", diff)
+			} else if len(aa) <= i {
+				left = chatText[i]
+				diff := width - runewidth.StringWidth(left)
+				right = strings.Repeat(" ", diff)
+			} else {
+				left = chatText[i]
+				right = aa[i]
+			}
 		} else {
-			left = aa[i]
-			right = chatText[i]
+			if len(chatText) <= i {
+				left = aa[i]
+				diff := width - runewidth.StringWidth(left)
+				right = strings.Repeat(" ", diff)
+			} else if len(aa) <= i {
+				right = chatText[i]
+				diff := runewidth.StringWidth(aa[0])
+				left = strings.Repeat(" ", diff)
+			} else {
+				left = aa[i]
+				right = chatText[i]
+			}
+
+			w := width - runewidth.StringWidth(" "+right)
+			pad := strings.Repeat(" ", w)
+			right += pad
 		}
 		t := fmt.Sprintf("%s %s", left, right)
 		fmt.Println(t)
