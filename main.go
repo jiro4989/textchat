@@ -60,15 +60,6 @@ func main() {
 	words := config.Words
 	if len(words) < 1 {
 		lines := readStdin()
-		h := len(balloon.SplitRuneWidth(lines, width))
-		if h < len(aa) {
-			diff := len(aa) - h
-			var emptyLines []string
-			for i := 0; i < diff; i++ {
-				emptyLines = append(emptyLines, "")
-			}
-			lines = append(lines, emptyLines...)
-		}
 		if config.Right {
 			chatText = balloon.RightSlice(lines, width)
 		} else {
