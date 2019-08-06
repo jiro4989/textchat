@@ -12,5 +12,17 @@ script:
   - make test
   - make install
 
-# before_deploy:
-#   - make xbuild archive
+before_deploy:
+  - make xbuild archive
+
+deploy:
+  provider: releases
+  api_key:
+    secure: 1Y5ZETIA01XgjYeERmCelQuirWXoIrIO0EBs0TQ/s1iKkozvMZBckB6N08kv5fUKu3Wf+P9lY2q97SA12U/2LTsEKaqKvkUcGSsI+uZs+yU0bGgz8iO3VhtapF/KaJsFIMlgG6RddAFi7SQjDvu1yeuv56gSwCsRhYkTyYB36bMm+/LFdEtLLjjhYv8pFsserzMxXXccI86/kI4zbYNc96VDd+l5YY1winrKA4jmHAOLqGCYNQ2iFRxuOIIefZ1xROvwYUppPSUKI1sqUERt06qRUvDOLtxswQydAYWOt+RDf3mRNCBB1TezcymSPf6dxnkM8mUt+u4NWUWblceGVeSSdf0xLYsVnhuEThEWgUp6rDPclgmCnKXNYC5n+ogNWV8UoGpUpTGBIegbMy/oApF6O7tqjy6giHA3ugCYzJdJCp0THiu9rSYb1DzgHUB6FnFCnz40jWHoTsu/pWVEOR+N0FYHneMtMXBmskU6vB7eDdKzE39IDHVrz4vzh8iThyugguAwx5Vre2XfowL0Mda/eMV96+QMDKBO+38hUF69j2gk9/pPiVaJc8mXYArOCdXiyIVm1R13AP1QvQZZqga6/r2MXw1ypmgj/ZixyOMIM0KyROdRH562A1n5KAqsP6RbjijHCmeOlnFh6evsjxWqxWVGnAaYeVP52vxoPF8=
+  keep-history: false
+  skip_cleanup: true
+  file:
+    - 'dist/*.tar.gz'
+    - 'dist/*.zip'
+  on:
+    tags: true
