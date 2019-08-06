@@ -27,6 +27,9 @@ func Left(aa, chatText []string, config config.Config) []string {
 			right = chatText[i]
 			lw := runewidth.StringWidth(aa[0])
 			rw := runewidth.StringWidth(right)
+			fmt.Println(lw)
+			fmt.Println(rw)
+			fmt.Println(lw + 1 + rw)
 			left := align.AlignRight([]string{right}, lw+1+rw, config.Pad)
 			t = align.AlignLeft(left, config.Width, config.Pad)[0]
 		} else {
