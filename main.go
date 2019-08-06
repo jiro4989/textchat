@@ -26,7 +26,8 @@ Options:
 	-r --right              Say word on right.
 	-i --icon=<textfile>    Icon AA file.
 	-w --width=<width>      Display width. [default: 80]
-	-p --pad=<pad>          Pad string. [default:  ]`
+	-p --pad=<pad>          Pad string. [default:  ]
+	-n --name=<name>        Set speakers name.`
 
 func main() {
 	opts, _ := docopt.ParseDoc(doc)
@@ -44,7 +45,7 @@ func main() {
 }
 
 func Main(config config.Config) {
-	aa, err := icon.AA(config.Icon)
+	aa, err := icon.AA(config)
 	if err != nil {
 		panic(err)
 	}
