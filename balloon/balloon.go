@@ -47,16 +47,22 @@ func Left(text string, width int) []string {
 }
 
 func LeftSlice(texts []string, width int) []string {
+	// 横幅を取得
+	// widthは吹き出しこみの幅なのに対し、
+	// maxは吹き出しなしの幅である点に留意する
 	max := align.MaxStringWidth(texts)
 	if w := width - bodyPaddingWidth; w < max {
 		max = w
 	}
 
+	// 上部の吹き出し
 	var ret []string
 	border := strings.Repeat("-", max+bodyPaddingWidth-3)
 	top := fmt.Sprintf(" .%s.", border)
 	ret = append(ret, top)
 
+	// 1行ずつ吹き出しで囲う
+	// 1行がmaxを超過していた場合は次の行に折り返して追加する
 	for i, text := range texts {
 		for j, t := range SplitRuneWidth(text, max) {
 			var middle string
@@ -72,6 +78,7 @@ func LeftSlice(texts []string, width int) []string {
 		}
 	}
 
+	// 低部の吹き出し
 	bottom := fmt.Sprintf(" `%s'", border)
 	ret = append(ret, bottom)
 	return ret
@@ -79,39 +86,51 @@ func LeftSlice(texts []string, width int) []string {
 
 // Right returns right side balloon.
 func Right(text string, width int) []string {
-	srcWidth := width
+	return RightSlice([]string{text}, width)
+}
 
-	// Substitue left padding (4) and right padding (3)
-	bodyWidth := width - bodyPaddingWidth
-	if textWidth := runewidth.StringWidth(text); textWidth <= bodyWidth {
-		width = textWidth + bodyPaddingWidth
+func RightSlice(texts []string, width int) []string {
+	// 横幅を取得
+	// widthは吹き出しこみの幅なのに対し、
+	// maxは吹き出しなしの幅である点に留意する
+	max := align.MaxStringWidth(texts)
+	if w := width - bodyPaddingWidth; w < max {
+		max = w
 	}
 
-	var bln []string
+	// 上部の吹き出し
+	var ret []string
+	border := strings.Repeat("-", max+bodyPaddingWidth-3)
+	top := fmt.Sprintf(".%s. ", border)
+	top = strings.Repeat(" ", width-runewidth.StringWidth(top)) + top
+	ret = append(ret, top)
 
-	// Substitue left padding (2) and right padding (1)
-	lineWidth := width - 3
-	pad := strings.Repeat(" ", srcWidth-width)
-	top := pad + "." + strings.Repeat("-", lineWidth) + ". "
-	bln = append(bln, top)
+	// 1行ずつ吹き出しで囲う
+	// 1行がmaxを超過していた場合は次の行に折り返して追加する
+	for i, text := range texts {
+		for j, t := range SplitRuneWidth(text, max) {
+			var middle string
+			diff := max - runewidth.StringWidth(t)
+			pad := strings.Repeat(" ", diff)
+			middle += fmt.Sprintf("|  %s%s", t, pad)
+			if i+j == 0 {
+				middle += "   >"
+			} else {
+				middle += "  | "
+			}
 
-	for i, t := range SplitRuneWidth(text, bodyWidth) {
-		middle := pad
-		diff := width - bodyPaddingWidth - runewidth.StringWidth(t)
-		pad := strings.Repeat(" ", diff)
-		middle += fmt.Sprintf("|  %s%s", t, pad)
-		if i == 0 {
-			middle += "   >"
-		} else {
-			middle += "  | "
+			w := runewidth.StringWidth(middle)
+			middle = strings.Repeat(" ", width-w) + middle
+			ret = append(ret, middle)
 		}
-		bln = append(bln, middle)
 	}
 
-	bottom := pad + "`" + strings.Repeat("-", lineWidth) + "' "
-	bln = append(bln, bottom)
+	// 低部の吹き出し
+	bottom := fmt.Sprintf("`%s' ", border)
+	bottom = strings.Repeat(" ", width-runewidth.StringWidth(bottom)) + bottom
+	ret = append(ret, bottom)
 
-	return bln
+	return ret
 }
 
 func SplitRuneWidth(text string, width int) []string {
@@ -140,28 +159,4 @@ func SplitRuneWidth(text string, width int) []string {
 		texts = append(texts, ct)
 	}
 	return texts
-}
-
-func RightSlice(texts []string, width int) []string {
-	max := align.MaxStringWidth(texts)
-	var text string
-	for _, v := range texts {
-		w := runewidth.StringWidth(v)
-		diff := max - w
-		pad := strings.Repeat(" ", diff)
-		text += v + pad
-	}
-	srcWidth := width
-	if max < width-bodyPaddingWidth {
-		width = max + bodyPaddingWidth
-	}
-	var ret []string
-	for _, v := range Right(text, width) {
-		w := runewidth.StringWidth(v)
-		diff := srcWidth - w
-		pad := strings.Repeat(" ", diff)
-		t := pad + v
-		ret = append(ret, t)
-	}
-	return ret
 }
