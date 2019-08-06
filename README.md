@@ -4,33 +4,6 @@
 
 textchat is a terminal chat cli.
 
-## Development
-
-go version go1.12 linux/amd64
-
-### How to build
-
-You run below.
-
-```bash
-make build
-```
-
-You run below if you want to do cross compiling.
-
-```bash
-make bootstrap
-make xbuild
-```
-
-### Testing
-
-You run below.
-
-```bash
-make test
-```
-
 ## Usage
 
 Simple example is below.
@@ -87,6 +60,33 @@ go get github.com/jiro4989/textchat
 or
 
 Download binary from [Releases](https://github.com/jiro4989/textchat/releases).
+
+## Development
+
+go version go1.12 linux/amd64
+
+### How to build
+
+You run below.
+
+```bash
+make build
+```
+
+You run below if you want to do cross compiling.
+
+```bash
+make bootstrap
+make xbuild
+```
+
+### Testing
+
+You run below.
+
+```bash
+make test
+```
 
 ## Help
 
