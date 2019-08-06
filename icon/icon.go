@@ -21,6 +21,7 @@ func AA(file string) ([]string, error) {
 
 	text := string(b)
 	lines := strings.Split(text, "\n")
+	lines = lines[:len(lines)-1]
 	aa := align.AlignLeft(lines, -1, " ")
 	return aa, nil
 }

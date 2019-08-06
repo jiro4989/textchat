@@ -40,6 +40,10 @@ func main() {
 		return
 	}
 
+	Main(config)
+}
+
+func Main(config config.Config) {
 	aa, err := icon.AA(config.Icon)
 	if err != nil {
 		panic(err)
