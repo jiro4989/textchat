@@ -111,9 +111,9 @@ Usage:
 Options:
 	-h --help               Show this screen.
 	-v --version            Show version.
-	-r --right              Say word on right.
-	-i --icon=<textfile>    Icon AA file.
-	-w --width=<width>      Display width. [default: 80]
-	-p --pad=<pad>          Pad string. [default:  ]
+	-r --right              Say word on the right side.
+	-i --icon=<textfile>    Set icon AA file.
+	-w --width=<width>      Set chat screen width. [default: 80]
+	-p --pad=<pad>          Padding string. [default:  ]
 	-n --name=<name>        Set speakers name.
 ```
